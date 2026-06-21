@@ -2,11 +2,11 @@
 
 KernelSU 模块 —— 自动读取京东 Cookie 并同步至青龙面板。
 
-搭配 [jdpro](https://github.com/6dylan6/jdpro) 使用，彻底告别 Cookie 过期问题。
+搭配 [jdpro](https://github.com/6dylan6/jdpro) 使用，显著减少 Cookie 过期后的手动维护。
 
 ## 为什么需要这个模块
 
-jdpro 等京东脚本依赖 `JD_COOKIE` 环境变量，但 Cookie 有效期越来越短（部分用户每天过期）。手动抓包费时费力，本模块直接从京东 App WebView 数据库自动读取，每小时自动上传青龙面板，实现零人工维护。
+jdpro 等京东脚本依赖 `JD_COOKIE` 环境变量，但 Cookie 有效期越来越短（部分用户每天过期）。手动抓包费时费力，本模块直接从京东 App WebView 数据库自动读取，每小时同步青龙面板，省去反复抓包的麻烦。
 
 ## 功能
 

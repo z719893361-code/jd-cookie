@@ -13,6 +13,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	// 强制东八区（Android 默认 UTC，TZ 环境变量可能不生效）
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	if err == nil {
+		time.Local = loc
+	}
+}
+
 // pidAlive 检查进程是否存活（仅 Linux）
 func pidAlive(pid int) bool {
 	_, err := os.Stat("/proc/" + strconv.Itoa(pid))

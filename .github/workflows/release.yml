@@ -4,11 +4,13 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,37 +25,23 @@ jobs:
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Build Go backend
-        run: |
-          cd backend
-          CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build -ldflags="-s -w" -o ../kernelsu/bin/jd-cookie .
+      - name: Build Go
+        run: cd backend && CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build -ldflags="-s -w" -o ../kernelsu/bin/jd-cookie .
 
-      - name: Build frontend
-        run: |
-          cd frontend
-          npm ci
-          npm run build
+      - name: Build WebUI
+        run: cd frontend && npm ci && npm run build
 
       - name: Package
-        run: |
-          cd kernelsu
-          zip -r ../jd_assistant.zip .
+        run: cd kernelsu && zip -r ../jd_assistant.zip .
 
       - name: Checksum
         run: sha256sum jd_assistant.zip > jd_assistant.zip.sha256
 
-      - name: Release (tag only)
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          name: ${{ github.ref_name }}
           files: |
             jd_assistant.zip
             jd_assistant.zip.sha256
           generate_release_notes: true
-
-      - name: Upload artifact (manual)
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
-        with:
-          name: jd_assistant.zip
-          path: jd_assistant.zip

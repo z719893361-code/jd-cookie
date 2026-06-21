@@ -113,7 +113,11 @@ type runtimeState struct {
 	lastUpload string
 }
 
-var state = &runtimeState{startTime: time.Now()}
+var state = &runtimeState{}
+
+func (s *runtimeState) setStart() {
+	s.startTime = time.Now()
+}
 
 func (s *runtimeState) setUpload(t string) {
 	s.mu.Lock()

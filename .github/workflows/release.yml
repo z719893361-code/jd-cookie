@@ -28,6 +28,9 @@ jobs:
       - name: Build Go
         run: cd backend && CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build -ldflags="-s -w" -o ../kernelsu/bin/jd-cookie .
 
+      - name: Sync version
+        run: sed -i "s/^version=.*/version=${{ github.ref_name }}/" kernelsu/module.prop
+
       - name: Build WebUI
         run: cd frontend && npm ci && npm run build
 

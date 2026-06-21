@@ -6,7 +6,9 @@ KernelSU 模块 —— 自动读取京东 Cookie 并同步至青龙面板。
 
 ## 为什么需要这个模块
 
-jdpro 等京东脚本依赖 `JD_COOKIE` 环境变量，但 Cookie 有效期越来越短（部分用户每天过期）。手动抓包费时费力，本模块直接从京东 App WebView 数据库自动读取，每小时同步青龙面板，省去反复抓包的麻烦。
+jdpro 等京东脚本依赖 `JD_COOKIE` 环境变量��但 Cookie 有效期越来越短（部分用户每天过期）。手动抓包费时费力。
+
+本模块无需抓包——直接读取手机京东 App 的 WebView Cookie 数据库（`/data/data/com.jingdong.app.mall/app_webview/Default/Cookies`），提取 `pt_key` / `pt_pin` 后上传青龙面板。只要京东 App 登录态有效，Cookie 就能自动获取，省去反复抓包的麻烦。
 
 ## 功能
 

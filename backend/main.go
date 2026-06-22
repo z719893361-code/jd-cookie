@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 	_ "time/tzdata"
@@ -13,10 +14,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// pidAlive 检查进程是否存活（仅 Linux）
+// pidAlive 检查进程是否存活 且 确认为 jd-cookie（防止 PID 复用误判）
 func pidAlive(pid int) bool {
-	_, err := os.Stat("/proc/" + strconv.Itoa(pid))
-	return pid > 0 && err == nil
+	if pid <= 0 {
+		return false
+	}
+	b, err := os.ReadFile(fmt.Sprintf("/proc/%d/comm", pid))
+	if err != nil {
+		return false
+	}
+	return strings.TrimSpace(string(b)) == "jd-cookie"
 }
 
 // lastCookie 上次成功上传的 Cookie 值，用于去重（内存常驻，重启从 SQLite 恢复）
